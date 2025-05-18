@@ -1,9 +1,13 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 import requests
 
 app = Flask(__name__)
 
 API_KEY = "caa06fd32d2511265e135af540527a5f"  # <--- Make sure it's a valid key
+
+@app.route('/')
+def index():
+    return render_template('index.html')
 
 @app.route('/weather', methods=['GET'])
 def get_weather():

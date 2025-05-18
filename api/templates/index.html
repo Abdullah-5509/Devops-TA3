@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Weather App</title>
+    <style>
+        body {
+            background: #121212;
+            color: #fff;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 100px;
+        }
+        input, button {
+            padding: 10px;
+            font-size: 16px;
+            margin: 5px;
+            border-radius: 5px;
+            border: none;
+        }
+        button {
+            background-color: #1e88e5;
+            color: white;
+            cursor: pointer;
+        }
+        #result {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🌦️ Weather App</h1>
+    <input type="text" id="cityInput" placeholder="Enter city name">
+    <button onclick="getWeather()">Get Weather</button>
+    <div id="result"></div>
+
+    <script>
+        async function getWeather() {
+            const city = document.getElementById("cityInput").value;
+            const resultDiv = document.getElementById("result");
+            resultDiv.innerHTML = "Loading...";
+
+            try {
+                const res = await fetch(`/weather?city=${encodeURIComponent(city)}`);
+                const data = await res.json();
+
+                if (!res.ok) {
+                    resultDiv.innerHTML = `Error: ${data.error}`;
+                } else {
+                    resultDiv.innerHTML = `
+                        <h2>${data.city}</h2>
+                        <p>🌡️ Temperature: ${data.temperature} °C</p>
+                        <p>📝 Condition: ${data.description}</p>
+                    `;
+                }
+            } catch (err) {
+                resultDiv.innerHTML = "Failed to fetch weather data.";
+            }
+        }
+    </script>
+</body>
+</html>
