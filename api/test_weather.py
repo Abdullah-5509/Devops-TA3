@@ -60,6 +60,28 @@ assert "New York" in heading
 assert "," in heading  # e.g. "New York, US"
 print("✅ Test 5 Passed: City and country displayed")
 
+# === Test Case 6: Humidity and pressure values ===
+city_input.clear()
+city_input.send_keys("Tokyo")
+driver.find_element(By.TAG_NAME, "button").click()
+time.sleep(2)
+
+text = driver.find_element(By.ID, "result").text
+assert "Humidity:" in text and "Pressure:" in text
+print("✅ Test 6 Passed: Humidity and Pressure shown")
+
+# === Test Case 7: Loading message replaced ===
+city_input.clear()
+city_input.send_keys("Paris")
+driver.find_element(By.TAG_NAME, "button").click()
+
+loading_text = driver.find_element(By.ID, "result").text
+assert "Loading..." in loading_text
+
+time.sleep(2)
+new_text = driver.find_element(By.ID, "result").text
+assert "Loading..." not in new_text
+print("✅ Test 7 Passed: Loading message cleared")
 
 # Close the browser
 driver.quit()
