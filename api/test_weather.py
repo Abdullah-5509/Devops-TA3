@@ -38,5 +38,28 @@ time.sleep(2)
 assert "Error" in driver.page_source
 print("✅ Test 3 Passed: Empty input")
 
+# === Test Case 4: Check if icon loads ===
+city_input = driver.find_element(By.ID, "cityInput")
+city_input.clear()
+city_input.send_keys("Delhi")
+driver.find_element(By.TAG_NAME, "button").click()
+time.sleep(2)
+
+icon = driver.find_element(By.TAG_NAME, "img")
+assert "openweathermap.org/img/wn/" in icon.get_attribute("src")
+print("✅ Test 4 Passed: Weather icon loaded")
+
+# === Test Case 5: Check city and country ===
+city_input.clear()
+city_input.send_keys("New York")
+driver.find_element(By.TAG_NAME, "button").click()
+time.sleep(2)
+
+heading = driver.find_element(By.TAG_NAME, "h2").text
+assert "New York" in heading
+assert "," in heading  # e.g. "New York, US"
+print("✅ Test 5 Passed: City and country displayed")
+
+
 # Close the browser
 driver.quit()
