@@ -3,7 +3,7 @@ import requests
 
 app = Flask(__name__)
 
-API_KEY = "caa06fd32d2511265e135af540527a5f"  # <-- Your existing valid key
+API_KEY = "caa06fd32d2511265e135af540527a5f"
 
 @app.route('/')
 def index():
@@ -16,15 +16,14 @@ def get_weather():
         return jsonify({'error': 'City is required'}), 400
 
     url = f"http://api.openweathermap.org/data/2.5/weather?q={city}&appid={API_KEY}&units=metric"
-    response = requests.get(url)
 
+    response = requests.get(url)
     try:
         data = response.json()
     except Exception as e:
         return jsonify({'error': 'Invalid JSON response from API'}), 500
 
-    if response.status_code != 200 or 'main' not in data:
-        print("Error response:", data)  # Debug error details
+    if response.status_code != 200:
         return jsonify({'error': data.get('message', 'Unknown error')}), response.status_code
 
     return jsonify({

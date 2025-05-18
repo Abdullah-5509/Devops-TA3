@@ -2,62 +2,89 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Weather App</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <style>
         body {
-            background: linear-gradient(135deg, #a1c4fd, #c2e9fb);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0d1117;
+            color: #c9d1d9;
+            font-family: 'Segoe UI', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 100px 20px;
         }
-        .glass {
-            background: rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(15px);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+        input, button {
+            padding: 10px;
+            font-size: 16px;
+            margin: 5px;
+            border-radius: 5px;
+            border: none;
+        }
+        input {
+            width: 250px;
+        }
+        button {
+            background-color: #238636;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #2ea043;
+        }
+        #result {
+            margin-top: 30px;
+            text-align: center;
+            background: #161b22;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.1);
+            max-width: 400px;
+            width: 100%;
+        }
+        .icon {
+            width: 80px;
+            height: 80px;
         }
     </style>
 </head>
-<body class="min-h-screen flex flex-col items-center justify-center text-gray-800">
-
-    <div class="text-center mb-8">
-        <h1 class="text-4xl font-bold text-white drop-shadow-md flex items-center justify-center gap-2">
-            ☀️ Weather App
-        </h1>
-        <p class="text-lg text-gray-100 mt-2">Get the latest weather forecast</p>
-    </div>
-
-    <div class="bg-white p-4 rounded-xl shadow-lg w-80 flex items-center justify-between gap-2">
-        <input id="cityInput" class="flex-1 px-4 py-2 rounded-md border focus:outline-none focus:ring-2 focus:ring-blue-400" placeholder="Enter city" />
-        <button onclick="getWeather()" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md font-semibold">Get</button>
-    </div>
-
-    <div id="weatherCard" class="glass mt-10 p-6 rounded-2xl text-white text-center w-80 hidden">
-        <h2 class="text-2xl font-semibold mb-2" id="location">City, Country</h2>
-        <div class="text-6xl mb-4" id="icon">🌦️</div>
-        <p class="text-xl font-bold" id="temperature">-- °C</p>
-        <p class="italic text-sm" id="description">Description</p>
-
-        <div class="mt-4 space-y-1 text-left">
-            <p id="humidity">💧 Humidity: --%</p>
-            <p id="wind">💨 Wind: -- m/s</p>
-            <p id="pressure">🧭 Pressure: -- hPa</p>
-        </div>
-    </div>
+<body>
+    <h1>🌦️ Weather App</h1>
+    <input type="text" id="cityInput" placeholder="Enter city name">
+    <button onclick="getWeather()">Get Weather</button>
+    <div id="result"></div>
 
     <script>
         async function getWeather() {
-            const city = document.getElementById('cityInput').value;
-            const response = await fetch(`/weather?city=${city}`);
-            const data = await response.json();
+            const city = document.getElementById("cityInput").value;
+            const resultDiv = document.getElementById("result");
+            resultDiv.innerHTML = "Loading...";
 
-            document.getElementById('weatherCard').style.display = 'block';
-            document.getElementById('location').textContent = `${data.name}, ${data.sys.country}`;
-            document.getElementById('icon').textContent = "☁️";
-            document.getElementById('temperature').textContent = `${data.main.temp} °C (feels like ${data.main.feels_like} °C)`;
-            document.getElementById('description').textContent = data.weather[0].description;
-            document.getElementById('humidity').textContent = `💧 Humidity: ${data.main.humidity}%`;
-            document.getElementById('wind').textContent = `💨 Wind: ${data.wind.speed} m/s`;
-            document.getElementById('pressure').textContent = `🧭 Pressure: ${data.main.pressure} hPa`;
+            try {
+                const res = await fetch(`/weather?city=${encodeURIComponent(city)}`);
+                const data = await res.json();
+
+                if (!res.ok) {
+                    resultDiv.innerHTML = `❌ Error: ${data.error}`;
+                } else {
+                    const iconUrl = `http://openweathermap.org/img/wn/${data.icon}@2x.png`;
+
+                    resultDiv.innerHTML = `
+                        <h2>${data.city}, ${data.country}</h2>
+                        <img src="${iconUrl}" alt="Weather Icon" class="icon">
+                        <p>🌡️ <strong>${data.temperature} °C</strong> (feels like ${data.feels_like} °C)</p>
+                        <p>📝 ${data.description}</p>
+                        <p>💧 Humidity: ${data.humidity}%</p>
+                        <p>🌬️ Wind Speed: ${data.wind_speed} m/s</p>
+                        <p>🧭 Pressure: ${data.pressure} hPa</p>
+                    `;
+                }
+            } catch (err) {
+                resultDiv.innerHTML = "⚠️ Failed to fetch weather data.";
+            }
         }
     </script>
 </body>
