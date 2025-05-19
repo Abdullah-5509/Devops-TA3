@@ -72,7 +72,7 @@ Chrome is installed
 ChromeDriver matches Chrome version
 
 
-
+```
 ---
 
 Tech Stack
@@ -95,24 +95,7 @@ Selenium (for testing)
 
 Screenshots
 
-![WhatsApp Image 2025-05-19 at 10 25 58_03b051f8](https://github.com/user-attachments/assets/8079d59b-f8b3-42ca-ba48-1b4e27cd148d)
+![Weather app](https://github.com/user-attachments/assets/2026875f-0223-4a35-b7c0-695cb953684a)
 
 
 
----
-
-License
-
-MIT License. Feel free to use and modify.
-
-
----
-
-Author
-
-Your Name
-GitHub
-
----
-
-Let me know if you'd like a version that includes *Kubernetes, **CI/CD with Jenkins, or **deployment to cloud platforms*.
